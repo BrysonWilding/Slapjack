@@ -4,12 +4,8 @@ import java.util.List;
 public class Player {
 	private List<Card> hand = new ArrayList<>();
 	
-	public void slap() {
-		
-	}
-	
-	public void addCardToHand(Card card) {
-		hand.add(card);
+	public void addCardToHand(List<Card> card) {
+		hand.addAll(card);
 	}
 	
 	public Card drawCard() {
