@@ -13,4 +13,8 @@ public class Player {
 		hand.remove(0);
 		return cardToPlay;
 	}
+
+	public List<Card> getHand(){
+		return hand;
+	}
 }

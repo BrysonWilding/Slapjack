@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.awt.event.*;
 import java.awt.image.*;
 import java.net.*;
 import java.io.IOException;
@@ -9,6 +8,7 @@ import java.io.File;
 import javax.imageio.*;
 
 public class Deck {
+
     private List<Card> cards = new ArrayList<>();
 
     public Deck() {
@@ -26,6 +26,10 @@ public class Deck {
 
     public void shuffle() {
         Collections.shuffle(cards);
+    }
+
+    public List<Card> getCards(){
+        return cards;
     }
 
     

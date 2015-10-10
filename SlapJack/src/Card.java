@@ -19,12 +19,14 @@ public class Card {
     
    
    private Rank rank;
-	private Suit suit;
+   private Suit suit;
    private final BufferedImage image;
 
    public Rank rank() { return rank; }
    public Suit suit() { return suit; }
    public BufferedImage image() { return image; }
    public String toString() { return rank + " of " + suit; }
+   public BufferedImage getImage(){return image;}
+
     
 }
