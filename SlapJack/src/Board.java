@@ -121,6 +121,18 @@ public class Board extends JFrame {
       }
 
    }
+   
+   public void slap(Player player){
+	   if(cards.get(0).rank().equals("JACK")) {
+		  this.player.addCardToHand(cards);
+	   } else {
+		   if(this.player.equals(cpu)) {
+			   player.addCardToHand(cards);
+		   } else {
+			   cpu.addCardToHand(cards);
+		   }
+	   }
+   }
 
 	public static void main(String[] args){
 		Board bob = new Board(new File("feltTable.jpg"));
