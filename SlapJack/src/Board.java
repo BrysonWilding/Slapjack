@@ -15,6 +15,31 @@ public class Board extends JFrame {
    private Player player = new Player();
    private Player cpu = new Player();
    private List<Card> cards = new ArrayList<>();
+   private Timer cpuTimer;
+   private Timer gameTimer;
+   private CardsPanel cardsPanel;
+   private boolean playerVictory = false;
+   private boolean cpuTurn = false; 
+   
+   private ActionListener cpuListener= new ActionListener(){
+                  public void actionPerformed(ActionEvent e){
+                     cpuAction();
+                  }
+               };
+   private ActionListener gameListener= new ActionListener(){
+                  public void actionPerformed(ActionEvent e){
+                   System.out.println("game");
+                     if(cpuTurn){
+                        flipCard(cpu);
+                        cpuTurn = false;
+                     }
+                     else{
+                        flipCard(player);
+                        cpuTurn = true;
+                     }
+                  }
+               };
+   
 
 	Board(File imageFile){
        setContentPane(new JLabel(new ImageIcon(imageFile.getAbsolutePath())));
@@ -28,14 +53,16 @@ public class Board extends JFrame {
       Deck d = new Deck();
       player.addCardToHand(d.getCards().subList(0,26));
       cpu.addCardToHand(d.getCards().subList(26, 52));
-
+      
+      System.out.println(player.getHand().isEmpty());
+      
       //THIS IS A TEST LINE.  Puts cards in center deck for testing purposes
       //cards = player.getHand();
       
       // User input 
        Action playerSlap = new AbstractAction(){
     	   public void actionPerformed(ActionEvent e){
-    		   slap();
+    		   slap(player, cpu);
     	   }
        };
        getRootPane().getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "pressed");
@@ -46,9 +73,9 @@ public class Board extends JFrame {
       getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
       add(Box.createHorizontalGlue());
 
-      CardsPanel panel = new CardsPanel();
-      panel.setOpaque(false);
-      add(panel);
+      cardsPanel = new CardsPanel();
+      cardsPanel.setOpaque(false);
+      add(cardsPanel);
       
       add(Box.createHorizontalGlue());
       // --------------Establish Central Column Layout-------------
@@ -100,7 +127,7 @@ public class Board extends JFrame {
             int y = (getHeight() - 250)/2; //where card is located on JPanel
 
             //displays the most recently flipped card
-            g.drawImage(cards.get(cards.size() - 1).getImage(), h, y, 143, 200, this);
+            g.drawImage(cards.get(0).getImage(), h, y, 143, 200, this);
             Polygon deckShadow = new Polygon();
             deckShadow.addPoint(h+143, y);
             deckShadow.addPoint(h+143, y +192);
@@ -150,11 +177,11 @@ public class Board extends JFrame {
       playItem.setToolTipText("Play a new random game");
       playItem.setAccelerator(KeyStroke.getKeyStroke("ctrl P"));
       playItem.setMnemonic('P');
-      gameMenu.add(playItem);
       playItem.addActionListener(new ActionListener(){
                public void actionPerformed(ActionEvent e){
                   play(); }});
-   
+      gameMenu.add(playItem);
+      
       JMenuItem restartItem = new JMenuItem("Restart");
       restartItem.setToolTipText("Restart this game");
       restartItem.setAccelerator(KeyStroke.getKeyStroke("ctrl R"));
@@ -167,7 +194,13 @@ public class Board extends JFrame {
    }
    
    public void play(){
-   
+      cpuTimer = new Timer(500,cpuListener);
+      gameTimer = new Timer(1250, gameListener);
+      
+      cpuTimer.start();
+      gameTimer.start();
+      
+      System.out.println("play");
    }
    
    public void restart(){
@@ -176,14 +209,40 @@ public class Board extends JFrame {
       new Board(new File("feltTable.jpg"));
    }
    
-   public void slap(){
+   public void slap(Player slapper, Player otherPlayer){
       if(!cards.isEmpty()){
    	   if(cards.get(0).rank().equals("JACK")) {
-   		  player.addCardToHand(cards);
+   		  slapper.addCardToHand(cards);
    	   } else {
-   		   cpu.addCardToHand(cards);
+   		   otherPlayer.addCardToHand(cards);
    	   }
       }   
+   }
+   
+   public void cpuAction(){
+      if(!cards.isEmpty()){
+         if(cards.get(0).rank().equals("JACK")){
+         try{
+            Thread.sleep((int)(Math.random()*2000));
+            if(cards.get(0).rank().equals("JACK"))// Check after AI delay
+               slap(cpu,player);
+            } catch (InterruptedException e) {}
+         }
+      }
+   }  
+   
+   public boolean flipCard(Player currentPlayer){
+    System.out.println("flip");
+      if(currentPlayer.getHand().isEmpty() && cards.isEmpty()) { // check for victory
+         // Some victory code
+         return false;
+      }
+      if(!currentPlayer.getHand().isEmpty()){
+         Card flippingCard = currentPlayer.drawCard();
+         cards.add(0, flippingCard);
+      }
+      repaint();
+      return true;      
    }
    
 	public static void main(String[] args){
