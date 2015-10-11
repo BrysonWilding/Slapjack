@@ -186,6 +186,53 @@ public class Board extends JFrame {
       }   
    }
    
+    public static void slapTimer()
+   {
+       // Create a timed slapper
+      // It will need to be able to be cancelled if the user slaps first.
+       ActionListener cpuSlapper = new ActionListener() {
+          public void actionPerformed(ActionEvent actionEvent) {
+            System.out.println("SlapJack!");
+          }
+        };
+        
+      int random = (int)(Math.random()*2000);
+      Timer slapper = new Timer(random, cpuSlapper);
+         slapper.setRepeats(false);
+         slapper.setInitialDelay(random);
+         System.out.println(random);
+         slapper.start();
+         
+      try {
+         Thread.sleep(random);
+          } catch (InterruptedException e) {
+       }
+       slapper.stop();
+       System.out.println(random);
+   }
+   
+   public static void gameTimer()
+   {
+      // Create a repeating random timer
+      
+      ActionListener actionListener = new ActionListener() {
+          public void actionPerformed(ActionEvent actionEvent) {
+            System.out.println("an example");
+          }
+        };
+        
+      Timer timer = new Timer(1000, actionListener);
+         timer.start();
+      try {
+         Thread.sleep(5000);
+          } catch (InterruptedException e) {
+       }
+       timer.stop();
+       System.out.println("done");
+
+   }
+
+   
 	public static void main(String[] args){
 		Board bob = new Board(new File("feltTable.jpg"));
 	}
