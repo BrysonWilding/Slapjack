@@ -28,7 +28,6 @@ public class Board extends JFrame {
                };
    private ActionListener gameListener= new ActionListener(){
                   public void actionPerformed(ActionEvent e){
-                   System.out.println("game");
                      if(cpuTurn){
                         flipCard(cpu);
                         cpuTurn = false;
@@ -53,8 +52,6 @@ public class Board extends JFrame {
       Deck d = new Deck();
       player.addCardToHand(d.getCards().subList(0,26));
       cpu.addCardToHand(d.getCards().subList(26, 52));
-      
-      System.out.println(player.getHand().isEmpty());
       
       //THIS IS A TEST LINE.  Puts cards in center deck for testing purposes
       //cards = player.getHand();
@@ -199,8 +196,6 @@ public class Board extends JFrame {
       
       cpuTimer.start();
       gameTimer.start();
-      
-      System.out.println("play");
    }
    
    public void restart(){
