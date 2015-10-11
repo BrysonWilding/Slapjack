@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -55,6 +56,7 @@ public class Board extends JFrame {
 		pack(); // Sizes window to fit its components
 		setLocationRelativeTo(null); // center this window on the screen
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+      setJMenuBar(makeMenu());
 		setVisible(true);
    }
 
@@ -134,13 +136,54 @@ public class Board extends JFrame {
 
    }
    
+   public JMenuBar makeMenu(){
+      JMenuBar	menuBar = new JMenuBar();
+   
+      
+      //-------------------Game Menu-----------------------------------
+      JMenu gameMenu = new JMenu("Game");
+      gameMenu.setMnemonic('G');
+      menuBar.add(gameMenu);
+      
+      JMenuItem playItem = new JMenuItem("Play");
+      playItem.setToolTipText("Play a new random game");
+      playItem.setAccelerator(KeyStroke.getKeyStroke("ctrl P"));
+      playItem.setMnemonic('P');
+      gameMenu.add(playItem);
+      playItem.addActionListener(new ActionListener(){
+               public void actionPerformed(ActionEvent e){
+                  play(); }});
+   
+      JMenuItem restartItem = new JMenuItem("Restart");
+      restartItem.setToolTipText("Restart this game");
+      restartItem.setAccelerator(KeyStroke.getKeyStroke("ctrl R"));
+      restartItem.setMnemonic('R');
+      gameMenu.add(restartItem);
+      restartItem.addActionListener(new ActionListener(){
+               public void actionPerformed(ActionEvent e){
+                  restart(); }});
+      return menuBar;
+   }
+   
+   public void play(){
+   
+   }
+   
+   public void restart(){
+      this.setVisible(false);
+      this.dispose();
+      new Board(new File("feltTable.jpg"));
+   }
+   
    public void slap(){
-	   if(cards.get(0).rank().equals("JACK")) {
-		  player.addCardToHand(cards);
-	   } else {
-		   cpu.addCardToHand(cards);
-	   }
-   	}
+      if(!cards.isEmpty()){
+   	   if(cards.get(0).rank().equals("JACK")) {
+   		  player.addCardToHand(cards);
+   	   } else {
+   		   cpu.addCardToHand(cards);
+   	   }
+      }   
+   }
    
 	public static void main(String[] args){
 		Board bob = new Board(new File("feltTable.jpg"));
