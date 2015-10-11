@@ -194,7 +194,7 @@ public class Board extends JFrame {
       cpuTimer = new Timer(500,cpuListener);
       gameTimer = new Timer(1250, gameListener);
       
-      cpuTimer.start();
+      //cpuTimer.start();
       gameTimer.start();
    }
    
@@ -206,20 +206,23 @@ public class Board extends JFrame {
    
    public void slap(Player slapper, Player otherPlayer){
       if(!cards.isEmpty()){
-   	   if(cards.get(0).rank().equals("JACK")) {
+         System.out.println(cards.get(0));
+   	   if(cards.get(0).rank().equals(Card.Rank.JACK)) {
    		  slapper.addCardToHand(cards);
    	   } else {
    		   otherPlayer.addCardToHand(cards);
    	   }
+         cards.clear();
       }   
    }
    
+   
    public void cpuAction(){
       if(!cards.isEmpty()){
-         if(cards.get(0).rank().equals("JACK")){
+         if(cards.get(0).rank().equals(Card.Rank.JACK)){
          try{
             Thread.sleep((int)(Math.random()*2000));
-            if(cards.get(0).rank().equals("JACK"))// Check after AI delay
+            if(cards.get(0).rank().equals(Card.Rank.JACK))// Check after AI delay
                slap(cpu,player);
             } catch (InterruptedException e) {}
          }
@@ -227,7 +230,6 @@ public class Board extends JFrame {
    }  
    
    public boolean flipCard(Player currentPlayer){
-    System.out.println("flip");
       if(currentPlayer.getHand().isEmpty() && cards.isEmpty()) { // check for victory
          // Some victory code
          return false;
