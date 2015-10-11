@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -14,19 +16,29 @@ public class Board extends JFrame {
 
 	Board(File imageFile){
        setContentPane(new JLabel(new ImageIcon(imageFile.getAbsolutePath())));
+
        initComponents();
 	}
 
    private void initComponents(){
       setTitle("Slapjack");
-
+      
       Deck d = new Deck();
       player.addCardToHand(d.getCards().subList(0,26));
       cpu.addCardToHand(d.getCards().subList(26, 52));
 
-      //DELETE THIS LINE.  Puts cards in center deck for testing purposes
-      cards = player.getHand();
-
+      //THIS IS A TEST LINE.  Puts cards in center deck for testing purposes
+      //cards = player.getHand();
+      
+      // User input 
+       Action playerSlap = new AbstractAction(){
+    	   public void actionPerformed(ActionEvent e){
+    		   slap();
+    	   }
+       };
+       getRootPane().getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "pressed");
+       getRootPane().getActionMap().put("pressed", playerSlap);
+      // End User Input
 
       // --------------Establish Central Column Layout-------------
       getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
@@ -121,7 +133,10 @@ public class Board extends JFrame {
       }
 
    }
-
+   
+   private void slap() {
+		// TODO Auto-generated method stub
+	}
 	public static void main(String[] args){
 		Board bob = new Board(new File("feltTable.jpg"));
 	}
