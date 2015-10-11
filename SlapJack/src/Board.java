@@ -194,7 +194,7 @@ public class Board extends JFrame {
       cpuTimer = new Timer(500,cpuListener);
       gameTimer = new Timer(1250, gameListener);
       
-      //cpuTimer.start();
+      cpuTimer.start();
       gameTimer.start();
    }
    
