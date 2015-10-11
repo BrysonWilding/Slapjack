@@ -134,15 +134,11 @@ public class Board extends JFrame {
 
    }
    
-   public void slap(Player player){
+   public void slap(){
 	   if(cards.get(0).rank().equals("JACK")) {
-		  this.player.addCardToHand(cards);
+		  player.addCardToHand(cards);
 	   } else {
-		   if(this.player.equals(cpu)) {
-			   player.addCardToHand(cards);
-		   } else {
-			   cpu.addCardToHand(cards);
-		   }
+		   cpu.addCardToHand(cards);
 	   }
    	}
    
