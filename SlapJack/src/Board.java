@@ -275,7 +275,7 @@ public class Board extends JFrame {
             sound.play("Sound/HaHaYouLoose.wav");
             return false;
         } else {
-            sound.play("Sount/WorthyOpponent.wav");
+            sound.play("Sound/WorthyOpponent.wav");
             return true;
         }
     }
