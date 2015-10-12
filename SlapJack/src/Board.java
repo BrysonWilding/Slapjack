@@ -192,7 +192,7 @@ public class Board extends JFrame {
    }
 
    public void play(){
-      sound.play("PressSpace.wav");
+      sound.play("Sound/PressSpace.wav");
       gameTimer = new Timer(1500, gameListener);
       gameTimer.start();
    }
