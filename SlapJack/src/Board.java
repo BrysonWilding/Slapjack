@@ -263,5 +263,3 @@ public class Board extends JFrame {
       Board bob = new Board(new File("Resources/feltTable.jpg"));
    }
 }
-
-//have to make a change to reload
