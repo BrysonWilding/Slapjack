@@ -192,6 +192,7 @@ public class Board extends JFrame {
    }
 
    public void play(){
+      sound.play("PressSpace.wav");
       gameTimer = new Timer(1500, gameListener);
       gameTimer.start();
    }
@@ -212,25 +213,26 @@ public class Board extends JFrame {
          System.out.println(cards.get(0));
          if(cards.get(0).rank().equals(Card.Rank.JACK)) {
             slapper.addCardToHand(cards);
+            if(slapper == player){
+               sound.play("Sound/WowQuickHands.wav");
+            }else {
+               cpuWins++;
+               int soundToPlay = cpuWins % 4;
+               if(soundToPlay == 0){
+                  sound.play("Sound/slap_jack.wav");
+               }else if(soundToPlay == 1){
+                  sound.play("Sound/slapJack.wav");
+               }else if(soundToPlay == 2){
+                  sound.play("Sound/YouCantBeet.wav");
+               }else {
+                  sound.play("Sound/YoMama.wav");
+               }
+            }
          } else {
             otherPlayer.addCardToHand(cards);
             sound.play("Sound/OhThanksForTheCards.wav");
          }
-         if(slapper == player){
-            sound.play("Sound/WowQuickHands.wav");
-         }else {
-            cpuWins++;
-            int soundToPlay = cpuWins % 4;
-            if(soundToPlay == 0){
-               sound.play("Sound/slap_jack.wav");
-            }else if(soundToPlay == 1){
-               sound.play("Sound/slapJack.wav");
-            }else if(soundToPlay == 2){
-               sound.play("Sound/YouCantBeet.wav");
-            }else {
-               sound.play("Sound/YoMama.wav");
-            }
-         }
+
          cards.clear();
       }
       gameTimer.restart();
