@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.event.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -18,54 +19,51 @@ public class Board extends JFrame {
    private Timer gameTimer;
    private CardsPanel cardsPanel;
    private boolean playerVictory = false;
-   private boolean cpuTurn = false;
-   private static AudioPlayer sound = new AudioPlayer();
-
+   private boolean cpuTurn = false; 
+   
    private ActionListener cpuListener= new ActionListener(){
-      public void actionPerformed(ActionEvent e){
-         cpuAction();
-      }
-   };
+                  public void actionPerformed(ActionEvent e){
+                     cpuAction();
+                  }
+               };
    private ActionListener gameListener= new ActionListener(){
-      public void actionPerformed(ActionEvent e){
-         if(cpuTurn){
-            flipCard(cpu);
-            cpuTurn = false;
-         }
-         else{
-            flipCard(player);
-            cpuTurn = true;
-         }
-         cpuTimer = new Timer(1000, cpuListener);
-         cpuTimer.start();
-      }
-   };
+                  public void actionPerformed(ActionEvent e){
+                     if(cpuTurn){
+                        flipCard(cpu);
+                        cpuTurn = false;
+                     }
+                     else{
+                        flipCard(player);
+                        cpuTurn = true;
+                     }
+                  }
+               };
+   
 
+	Board(File imageFile){
+       setContentPane(new JLabel(new ImageIcon(imageFile.getAbsolutePath())));
 
-   Board(File imageFile){
-      setContentPane(new JLabel(new ImageIcon(imageFile.getAbsolutePath())));
-
-      initComponents();
-   }
+       initComponents();
+	}
 
    private void initComponents(){
       setTitle("Slapjack");
-
+      
       Deck d = new Deck();
       player.addCardToHand(d.getCards().subList(0,26));
       cpu.addCardToHand(d.getCards().subList(26, 52));
-
+      
       //THIS IS A TEST LINE.  Puts cards in center deck for testing purposes
       //cards = player.getHand();
-
-      // User input
-      Action playerSlap = new AbstractAction(){
-         public void actionPerformed(ActionEvent e){
-            slap(player, cpu);
-         }
-      };
-      getRootPane().getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "pressed");
-      getRootPane().getActionMap().put("pressed", playerSlap);
+      
+      // User input 
+       Action playerSlap = new AbstractAction(){
+    	   public void actionPerformed(ActionEvent e){
+    		   slap(player, cpu);
+    	   }
+       };
+       getRootPane().getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "pressed");
+       getRootPane().getActionMap().put("pressed", playerSlap);
       // End User Input
 
       // --------------Establish Central Column Layout-------------
@@ -75,15 +73,16 @@ public class Board extends JFrame {
       cardsPanel = new CardsPanel();
       cardsPanel.setOpaque(false);
       add(cardsPanel);
-
+      
       add(Box.createHorizontalGlue());
       // --------------Establish Central Column Layout-------------
 
-      pack(); // Sizes window to fit its components
-      setLocationRelativeTo(null); // center this window on the screen
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+		pack(); // Sizes window to fit its components
+		setLocationRelativeTo(null); // center this window on the screen
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
       setJMenuBar(makeMenu());
-      setVisible(true);
+		setVisible(true);
    }
 
 
@@ -94,7 +93,7 @@ public class Board extends JFrame {
       CardsPanel(){
          setLayout(null);
          try {
-            back = ImageIO.read(new File("resources/back.png"));
+            back = ImageIO.read(new File("back.png"));
          } catch (IOException e) {
             e.printStackTrace();
          }
@@ -161,91 +160,75 @@ public class Board extends JFrame {
       }
 
    }
-
+   
    public JMenuBar makeMenu(){
       JMenuBar	menuBar = new JMenuBar();
-
-
+   
+      
       //-------------------Game Menu-----------------------------------
       JMenu gameMenu = new JMenu("Game");
       gameMenu.setMnemonic('G');
       menuBar.add(gameMenu);
-
+      
       JMenuItem playItem = new JMenuItem("Play");
       playItem.setToolTipText("Play a new random game");
       playItem.setAccelerator(KeyStroke.getKeyStroke("ctrl P"));
       playItem.setMnemonic('P');
       playItem.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e){
-            play(); }});
+               public void actionPerformed(ActionEvent e){
+                  play(); }});
       gameMenu.add(playItem);
-
+      
       JMenuItem restartItem = new JMenuItem("Restart");
       restartItem.setToolTipText("Restart this game");
       restartItem.setAccelerator(KeyStroke.getKeyStroke("ctrl R"));
       restartItem.setMnemonic('R');
       gameMenu.add(restartItem);
       restartItem.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e){
-            restart(); }});
+               public void actionPerformed(ActionEvent e){
+                  restart(); }});
       return menuBar;
    }
-
+   
    public void play(){
-      gameTimer = new Timer(1500, gameListener);
+      cpuTimer = new Timer(500,cpuListener);
+      gameTimer = new Timer(1250, gameListener);
+      
+      cpuTimer.start();
       gameTimer.start();
    }
-
+   
    public void restart(){
       this.setVisible(false);
       this.dispose();
-      new Board(new File("Resources/feltTable.jpg"));
+      new Board(new File("feltTable.jpg"));
    }
-
-
-   private int cpuWins = 0;
-
+   
    public void slap(Player slapper, Player otherPlayer){
-      gameTimer.stop();
-      cpuTimer.stop();
       if(!cards.isEmpty()){
-         System.out.println(cards.get(0));
-         if(cards.get(0).rank().equals(Card.Rank.JACK)) {
-            slapper.addCardToHand(cards);
-         } else {
-            otherPlayer.addCardToHand(cards);
-            sound.play("Sound/OhThanksForTheCards.wav");
-         }
-         if(slapper == player){
-            sound.play("Sound/WowQuickHands.wav");
-         }else {
-            cpuWins++;
-            int soundToPlay = cpuWins % 4;
-            if(soundToPlay == 0){
-               sound.play("Sound/slap_jack.wav");
-            }else if(soundToPlay == 1){
-               sound.play("Sound/slapJack.wav");
-            }else if(soundToPlay == 2){
-               sound.play("Sound/YouCantBeet.wav");
-            }else {
-               sound.play("Sound/YoMama.wav");
-            }
-         }
+         //System.out.println(cards.get(0)); TEST CODE
+   	   if(cards.get(0).rank().equals(Card.Rank.JACK)) {
+   		  slapper.addCardToHand(cards);
+   	   } else {
+   		   otherPlayer.addCardToHand(cards);
+   	   }
          cards.clear();
-      }
-      gameTimer.restart();
+      }   
    }
-
-
+   
+   
    public void cpuAction(){
       if(!cards.isEmpty()){
          if(cards.get(0).rank().equals(Card.Rank.JACK)){
-            slap(cpu,player);
+         try{
+            Thread.sleep(500 +(int)(Math.random()*2000));
+            if(cards.get(0).rank().equals(Card.Rank.JACK))// Check after AI delay
+               slap(cpu,player);
+            } catch (InterruptedException e) {}
          }
       }
-      cpuTimer.stop();
-   }
-
+   }  
+   
    public boolean flipCard(Player currentPlayer){
       if(currentPlayer.getHand().isEmpty() && cards.isEmpty()) { // check for victory
          // Some victory code
@@ -256,10 +239,10 @@ public class Board extends JFrame {
          cards.add(0, flippingCard);
       }
       repaint();
-      return true;
+      return true;      
    }
-
-   public static void main(String[] args){
-      Board bob = new Board(new File("Resources/feltTable.jpg"));
-   }
+   
+	public static void main(String[] args){
+		Board bob = new Board(new File("feltTable.jpg"));
+	}
 }
