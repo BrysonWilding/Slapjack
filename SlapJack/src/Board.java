@@ -19,6 +19,7 @@ public class Board extends JFrame {
    private CardsPanel cardsPanel;
    private boolean playerVictory = false;
    private boolean cpuTurn = false;
+   private boolean gameEnd = false;
    private static AudioPlayer sound = new AudioPlayer();
 
    private ActionListener cpuListener= new ActionListener(){
@@ -28,16 +29,18 @@ public class Board extends JFrame {
    };
    private ActionListener gameListener= new ActionListener(){
       public void actionPerformed(ActionEvent e){
-         if(cpuTurn){
-            flipCard(cpu);
-            cpuTurn = false;
-         }
-         else{
-            flipCard(player);
-            cpuTurn = true;
-         }
-         cpuTimer = new Timer(1000, cpuListener);
-         cpuTimer.start();
+    	 if(!gameEnd) {
+	         if(cpuTurn){
+	            flipCard(cpu);
+	            cpuTurn = false;
+	         }
+	         else{
+	            flipCard(player);
+	            cpuTurn = true;
+	         }
+	         cpuTimer = new Timer(1000, cpuListener);
+	         cpuTimer.start();
+	      }
       }
    };
 
@@ -249,16 +252,28 @@ public class Board extends JFrame {
    }
 
    public boolean flipCard(Player currentPlayer){
-      if(currentPlayer.getHand().isEmpty() && cards.isEmpty()) { // check for victory
-         // Some victory code
+	  
+      if(currentPlayer.getHand().isEmpty()) { // check for victory
+         playerVictory = victory(currentPlayer);
          return false;
       }
       if(!currentPlayer.getHand().isEmpty()){
          Card flippingCard = currentPlayer.drawCard();
          cards.add(0, flippingCard);
       }
+      
       repaint();
       return true;
+   }
+   
+   public boolean victory(Player currentPlayer) {
+	   gameEnd = true;
+       gameTimer.stop();
+	   if(currentPlayer.equals(player)){
+		   return false;
+	   } else {
+		   return true;
+	   }
    }
 
    public static void main(String[] args){
